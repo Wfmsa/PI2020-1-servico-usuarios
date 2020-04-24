@@ -2,49 +2,67 @@ const restify = require('restify');
 const errs = require('restify-errors');
 
 const server = restify.createServer({
-  name: 'myapp',
-  version: '1.0.0'
+    name: 'myapp',
+    version: '1.0.0'
 });
 
 var knex = require('knex')({
     client: 'mysql',
     connection: {
-      host : 'fermatil.com.br',
-      user : 'fermatil_pi',
-      password : 'pi2k20!@#',
-      database : 'fermatil_pi2k20'
+        host: 'fermatil.com.br',
+        user: 'fermatil_pi',
+        password: 'pi2k20!@#',
+        database: 'fermatil_pi2k20'
     }
-  });
+});
 
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
 server.listen(8080, function () {
-  console.log('%s listening at %s', server.name, server.url);
+    console.log('%s listening at %s', server.name, server.url);
 });
 
 // rotas REST
 
-server.get('/login/passageiro', (req, res, next) => {
+// rotas passageiros
+server.get('/lista/passageiro', (req, res, next) => {
 
     knex('USERS_PASSAGEIROS').then((dados) => {
         res.send(dados);
     }, next)
 });
 
+server.post('/login/passageiro', (req, res, next) => {
+    const { nome, passwd } = req.body;
+
+    knex('USERS_PASSAGEIROS')
+        .where({
+            Nome: nome,
+            passwd: passwd
+        })
+        .then((dados) => {
+            if (dados.length > 0)
+                res.send(true);
+            else
+                res.send(false);
+        }, next)
+});
+
+//rotas motorista
 server.post('/login/motorista', (req, res, next) => {
     const { nome, passwd } = req.body;
-    
+
     knex('USERS_MOTORISTA')
         .where({
             nome: nome,
             passwd: passwd
         })
         .then((dados) => {
-            if(dados.length > 0)
+            if (dados.length > 0)
                 res.send(true);
-            else 
+            else
                 res.send(false);
         }, next)
 });
@@ -79,7 +97,7 @@ server.put('/update/motorista/:id', (req, res, next) => {
         .where('id', id)
         .update(req.body)
         .then((dados) => {
-            if(!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+            if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
             res.send('dados atualizados');
         }, next)
 });
@@ -92,7 +110,7 @@ server.del('/delete/motorista/:id', (req, res, next) => {
         .where('id', id)
         .delete()
         .then((dados) => {
-            if(!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+            if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
             res.send('dados excluidos');
         }, next)
 });
