@@ -44,7 +44,7 @@ server.post('/login/passageiro', (req, res, next) => {
         })
         .then((dados) => {
             if (dados.length > 0)
-                res.send(true);
+                res.send(dados);
             else
                 res.send(false);
         }, next)
@@ -61,7 +61,7 @@ server.post('/login/motorista', (req, res, next) => {
         })
         .then((dados) => {
             if (dados.length > 0)
-                res.send(true);
+                res.send(dados);
             else
                 res.send(false);
         }, next)
