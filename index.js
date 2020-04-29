@@ -50,6 +50,19 @@ server.post('/login/passageiro', (req, res, next) => {
         }, next)
 });
 
+server.put('/update/statusPassageiro/:id', (req, res, next) => {
+
+    const { id,status } = req.body;
+
+    knex('USERS_PASSAGEIROS')
+        .where('id', id)
+        .update('status',status)
+        .then((dados) => {
+            if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+            res.send('dados atualizados');
+        }, next)
+});
+
 //rotas motorista
 server.post('/login/motorista', (req, res, next) => {
     const { nome, passwd } = req.body;
