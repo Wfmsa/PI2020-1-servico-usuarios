@@ -65,12 +65,12 @@ server.put('/update/statusPassageiro/:id', (req, res, next) => {
 
 server.put('/update/dadosPassageiro/:id', (req, res, next) => {
 
-    const { id, Nome, telefone, endereco_rua, endereco_bairro, endereco_num } = req.body;
+    const { id, nome, telefone, endereco_rua, endereco_bairro, endereco_num } = req.body;
 
     knex('USERS_PASSAGEIROS')
         .where('id', id)
-        .update({ Nome: Nome, telefone: telefone, endereco_rua: endereco_rua, endereco_bairro: endereco_bairro, endereco_num: endereco_num },
-        ['id', 'Nome','telefone','endereco_rua','endereco_bairro','endereco_num'])
+        .update({ nome: nome, telefone: telefone, endereco_rua: endereco_rua, endereco_bairro: endereco_bairro, endereco_num: endereco_num },
+        ['id', 'nome','telefone','endereco_rua','endereco_bairro','endereco_num'])
         .then((dados) => {
             if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
             res.send('dados atualizados');
@@ -100,6 +100,20 @@ server.post('/cadastro/motorista', (req, res, next) => {
         .insert(req.body)
         .then((dados) => {
             res.send(dados);
+        }, next)
+});
+
+server.put('/update/dadosMotorista/:id', (req, res, next) => {
+
+    const { id, nome, telefone, endereco_rua, endereco_bairro, endereco_num } = req.body;
+
+    knex('USERS_MOTORISTA')
+        .where('id', id)
+        .update({ nome: nome, telefone: telefone, endereco_rua: endereco_rua, endereco_bairro: endereco_bairro, endereco_num: endereco_num },
+        ['id', 'nome','telefone','endereco_rua','endereco_bairro','endereco_num'])
+        .then((dados) => {
+            if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+            res.send('dados atualizados');
         }, next)
 });
 
