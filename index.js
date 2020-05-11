@@ -52,11 +52,11 @@ server.post('/login/passageiro', (req, res, next) => {
 
 server.put('/update/statusPassageiro/:id', (req, res, next) => {
 
-    const { id, status } = req.body;
+    const { id, status, data_status } = req.body;
 
     knex('USERS_PASSAGEIROS')
         .where('id', id)
-        .update('status', status)
+        .update({status: status, data_status: data_status})
         .then((dados) => {
             if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
             res.send('dados atualizados');
