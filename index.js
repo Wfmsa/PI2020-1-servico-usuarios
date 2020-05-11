@@ -52,11 +52,25 @@ server.post('/login/passageiro', (req, res, next) => {
 
 server.put('/update/statusPassageiro/:id', (req, res, next) => {
 
-    const { id,status } = req.body;
+    const { id, status } = req.body;
 
     knex('USERS_PASSAGEIROS')
         .where('id', id)
-        .update('status',status)
+        .update('status', status)
+        .then((dados) => {
+            if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+            res.send('dados atualizados');
+        }, next)
+});
+
+server.put('/update/dadosPassageiro/:id', (req, res, next) => {
+
+    const { id, nome, telefone, endereco_rua, endereco_bairro, endereco_num } = req.body;
+
+    knex('USERS_PASSAGEIROS')
+        .where('id', id)
+        .update({ nome: nome, telefone: telefone, endereco_rua: endereco_rua, endereco_bairro: endereco_bairro, endereco_num: endereco_num },
+        ['id', 'nome','telefone','endereco_rua','endereco_bairro','endereco_num'])
         .then((dados) => {
             if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
             res.send('dados atualizados');
@@ -101,6 +115,33 @@ server.post('/cadastro/motorista', (req, res, next) => {
             res.send(dados);
         }, next)
 });
+
+server.put('/update/dadosMotorista/:id', (req, res, next) => {
+
+    const { id, nome, telefone, endereco_rua, endereco_bairro, endereco_num } = req.body;
+
+    knex('USERS_MOTORISTA')
+        .where('id', id)
+        .update({ nome: nome, telefone: telefone, endereco_rua: endereco_rua, endereco_bairro: endereco_bairro, endereco_num: endereco_num },
+        ['id', 'nome','telefone','endereco_rua','endereco_bairro','endereco_num'])
+        .then((dados) => {
+            if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+            res.send('dados atualizados');
+        }, next)
+});
+
+// server.get('/show/:id', (req, res, next) => {
+
+//     const { id } = req.params;
+
+//     knex('rest')
+//         .where('id', id)
+//         .first()
+//         .then((dados) => {
+//             if(!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+//             res.send(dados);
+//         }, next)
+// });
 
 server.put('/update/motorista/:id', (req, res, next) => {
 
