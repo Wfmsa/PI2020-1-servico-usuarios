@@ -27,9 +27,9 @@ server.listen(8080, function () {
 // rotas REST
 
 // rotas passageiros
-server.get('/lista/passageiro', (req, res, next) => {
-
-    knex('USERS_PASSAGEIROS').then((dados) => {
+server.post('/lista/passageiro', (req, res, next) => {
+    const { id } = req.body;
+    knex('USERS_PASSAGEIROS').where('id_motorista', id).then((dados) => {
         res.send(dados);
     }, next)
 });
@@ -63,6 +63,19 @@ server.put('/update/statusPassageiro/:id', (req, res, next) => {
         }, next)
 });
 
+server.put('/update/statusTodosPassageiro/', (req, res, next) => {
+
+    const { id,status } = req.body;
+
+    knex('USERS_PASSAGEIROS')
+        .where('id_motorista', id)
+        .update('status',status)
+        .then((dados) => {
+            if (!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
+            res.send('dados atualizados');
+        }, next)
+});
+
 //rotas motorista
 server.post('/login/motorista', (req, res, next) => {
     const { nome, passwd } = req.body;
@@ -88,19 +101,6 @@ server.post('/cadastro/motorista', (req, res, next) => {
             res.send(dados);
         }, next)
 });
-
-// server.get('/show/:id', (req, res, next) => {
-
-//     const { id } = req.params;
-
-//     knex('rest')
-//         .where('id', id)
-//         .first()
-//         .then((dados) => {
-//             if(!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
-//             res.send(dados);
-//         }, next)
-// });
 
 server.put('/update/motorista/:id', (req, res, next) => {
 
