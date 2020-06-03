@@ -108,9 +108,20 @@ server.post('/login/motorista', (req, res, next) => {
 });
 
 server.post('/cadastro/motorista', (req, res, next) => {
+    const  dados  = req.body;
 
     knex('USERS_MOTORISTA')
-        .insert(req.body)
+        .insert(dados)
+        .then((dados) => {
+            res.send(dados);
+        }, next)
+});
+
+server.post('/cadastro/passageiro', (req, res, next) => {
+    const  dados  = req.body;
+
+    knex('USERS_PASSAGEIROS')
+        .insert(dados)
         .then((dados) => {
             res.send(dados);
         }, next)
@@ -129,19 +140,6 @@ server.put('/update/dadosMotorista/:id', (req, res, next) => {
             res.send('dados atualizados');
         }, next)
 });
-
-// server.get('/show/:id', (req, res, next) => {
-
-//     const { id } = req.params;
-
-//     knex('rest')
-//         .where('id', id)
-//         .first()
-//         .then((dados) => {
-//             if(!dados) return res.send(new errs.BadRequestError('nada foi encontrado'))
-//             res.send(dados);
-//         }, next)
-// });
 
 server.put('/update/motorista/:id', (req, res, next) => {
 
